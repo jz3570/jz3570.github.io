@@ -6,7 +6,7 @@ output:
     toc_float: true
 ---
 
-We're going to make some plotly plots. 
+
 
 ## Load packages and data
 
@@ -20,72 +20,65 @@ library(plotly)
 Let's get some data.
 
 ```{r}
-data("nyc_airbnb")
+data("ny_noaa")
 
-nyc_airbnb = 
-  nyc_airbnb %>% 
-  mutate(rating = review_scores_location / 2) %>% 
+ny_noaa <- separate(ny_noaa, date, into = c("year", "month", "day"), sep = '-')
+ny_noaa[,2:4] <- sapply(ny_noaa[,2:4], as.integer)
+ny_noaa[,5:9] <- sapply(ny_noaa[,5:9], as.double)
+# ny_noaa <- mutate(ny_noaa, prcp = prcp*100, tmax = tmax*10, tmin = tmin*10)
+ny_noaa_plot = 
+  ny_noaa %>%
+  mutate(ny_noaa, prcp = prcp*100, tmax = tmax*10, tmin = tmin*10) %>% 
+  # separate(ny_noaa, date, into = c("year", "month", "day"), sep = '-') %>% 
   select(
-    borough = neighbourhood_group, neighbourhood, price, room_type,
-    lat, long, rating) %>% 
+    year, month, day, prcp, snow, tmax, tmin) %>% 
   filter(
-    borough == "Manhattan",
-    room_type == "Entire home/apt",
-    price %in% 100:500
+    year %in% 1998:2000 ,
+    snow>0
   ) %>% 
-  drop_na(rating)
+  drop_na(tmax, tmin)
 ```
+I only selected data from 1998 to 2000, because there's not much missing the data for that period of time, and the winter was very cold for those years. Therefore, I want to look into the relationship among snow, precipitation, temperature in those years. 
 
-Let's make a scatterplot!!
+
+Scatterplot
+This is a scatterplot of minimum temperature and snow depth. I would expect there's a negative correlation between snow and minimum temperature because it's usually very clod when there's more snow.
 
 ```{r}
-nyc_airbnb %>% 
+ny_noaa_plot  %>% 
   mutate(
-    text_label = str_c("Neighborhood: ", neighbourhood)
+    text_label = str_c("year: ", as.factor(year))
   ) %>% 
   plot_ly(
-    x = ~lat, y = ~long, color = ~price,
+    x = ~snow, y = ~tmin, color = ~as.factor(year),
     type = "scatter", mode = "markers",
     alpha = .5, text = ~text_label
   )
 ```
 
-can we make boxplots?? Sure can!
+From the scatterplot, we can see that there's no spesific pattern of the trend. That shows there's no spesific relationship between the minimum temperature and snow depth, which is different from what I expected.
+
+box plots
 
 ```{r}
-nyc_airbnb %>% 
-  mutate(neighbourhood = fct_reorder(neighbourhood, price)) %>% 
+ny_noaa_plot %>% 
+  mutate(year = fct_reorder(as.factor(year), tmin)) %>% 
   plot_ly(
-    y = ~price, color = ~neighbourhood,
+    y = ~tmin, color = ~year,
     type = "box", colors = "viridis")
 ```
 
 
-Can we make a bar plot?
+bar plot
 
 ```{r}
-nyc_airbnb %>% 
-  count(neighbourhood) %>% 
-  mutate(neighbourhood = fct_reorder(neighbourhood, n)) %>%
+ny_noaa_plot %>% 
+  count(year) %>% 
+  mutate(year = fct_reorder(as.factor(year), n)) %>%
   plot_ly(
-    x = ~neighbourhood, y = ~n,
+    x = ~as.factor(year), y = ~n,
     type = "bar")
 ```
 
 
-## ggplotly ...
-
-```{r}
-ggp_scatterplot = 
-  nyc_airbnb %>% 
-  ggplot(aes(x = lat, y = long, color = price)) + 
-  geom_point()
-
-ggplotly(ggp_scatterplot)
-```
-
-
-## Create a dashboard ...
-
-Not here though. 
 
