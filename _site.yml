@@ -5,7 +5,7 @@ navbar:
   right:
     - text: "Dashboard"
       href: dashboard.html
-    - text: "Work Experience"
+    - text: "Experience"
       href: work_experience.html
     - text: "About"
       href: about.html
