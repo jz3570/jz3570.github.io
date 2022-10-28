@@ -1,5 +1,5 @@
 ---
-title: "My awesome website"
+title: "My website"
 output: 
   html_document:
     toc: true
@@ -9,7 +9,7 @@ output:
 
 # This is About Page
 
-## This project is created for P8105 Ddata Science classon Oct.24 2022.
+## This project is created for P8105 Ddata Science class on Oct.24 2022.
 ## This project introduces details about Jiawen Zhao's education and work experience. 
 ## Please contact jz3570@cumc.columbia.edu for more detail info about Jiawen Zhao.
 ## Thank you!

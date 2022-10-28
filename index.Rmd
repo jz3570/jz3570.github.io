@@ -32,26 +32,3 @@ output:
 #### Dean's List, Art and Science College, 2020 spring semester
 
 
-
-## Work Experience
-### Bucknell Teaching and Learning Center
-#### Level 2 Tutor and Study Group Facilitator	
-#### 01/2020-05/2022
-##### - Developed exercises to enhance content knowledge mastery and application.
-##### - Created resources in the Statistics and Computer Science fields, such as problem-based worksheets and study plans.
-##### - Mentored two new staff to develop their leadership and organizational skills further.
-
-### The Effect of Oxytocin and Social Isolation
-#### Research Assistant in Bucknell Biology Dept.	
-#### 02/2021-present
-##### - Explored the differentially expressed gene in voles’ brain tissues by DEBrowser and identified their function by gProfiler. 
-##### - Trimmed off low quality genetic data by using fastqc and used Kallisto and Star for gene alignment
-##### - Built regression models (negative binomial distribution) to explore the effect of treatments on specific genes.
-
-### How substance use disorder is handled in recovery friendly businesses
-#### Partnered with United Way    
-#### 01/2022-05/2022
-##### - Design the randomized sampling process (stratified). Calculate the sample size and the appropriate allocation in each stratum according to previous studies.
-##### - Created the survey questionnaire and wrote IRB proposal.
-
-

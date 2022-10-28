@@ -1,0 +1,77 @@
+---
+title: "Snow days in nyc Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    source_code: embed
+---
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(p8105.datasets)
+library(flexdashboard)
+library(plotly)
+```
+
+```{r, include = FALSE}
+data("ny_noaa")
+
+ny_noaa <- separate(ny_noaa, date, into = c("year", "month", "day"), sep = '-')
+ny_noaa[,2:4] <- sapply(ny_noaa[,2:4], as.integer)
+ny_noaa[,5:9] <- sapply(ny_noaa[,5:9], as.double)
+# ny_noaa <- mutate(ny_noaa, prcp = prcp*100, tmax = tmax*10, tmin = tmin*10)
+ny_noaa_plot = 
+  ny_noaa %>%
+  mutate(ny_noaa, prcp = prcp*100, tmax = tmax*10, tmin = tmin*10) %>% 
+  # separate(ny_noaa, date, into = c("year", "month", "day"), sep = '-') %>% 
+  select(
+    year, month, day, prcp, snow, tmax, tmin) %>% 
+  filter(
+    year %in% 1998:2000 ,
+    snow>0
+  ) %>% 
+  drop_na(tmax, tmin)
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### The relashion between minimum temperature and snowdepth in 1998-2000
+
+```{r}
+ny_noaa_plot  %>% 
+  mutate(
+    text_label = str_c("year: ", as.factor(year))
+  ) %>% 
+  plot_ly(
+    x = ~snow, y = ~tmin, color = ~as.factor(year),
+    type = "scatter", mode = "markers",
+    alpha = .5, text = ~text_label
+  )
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### The boxplot of minimum temperature by year
+
+```{r}
+ny_noaa_plot %>% 
+  mutate(year = fct_reorder(as.factor(year), tmin)) %>% 
+  plot_ly(
+    y = ~tmin, color = ~year,
+    type = "box", colors = "viridis")
+```
+
+### Bar chart of snow days in each year from 1998 to 2000
+
+```{r}
+ny_noaa_plot %>% 
+  count(year) %>% 
+  mutate(year = fct_reorder(as.factor(year), n)) %>%
+  plot_ly(
+    x = ~as.factor(year), y = ~n,
+    type = "bar")
+```
+
